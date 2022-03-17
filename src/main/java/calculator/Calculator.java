@@ -7,12 +7,15 @@ public class Calculator {
         return a + b;
     }
 
-    public double sqrtOfAFraction(double a, double b) {
-        if (b == 0) {
-            return 0;
-        } else if (a * b >= 0) {
-            return Math.sqrt(a / b);
+    public double sqrtOfAFraction(double a, double b) throws Exception {
+
+        if (a * b > 0 || (a * b == 0 && a >= 0)) {
+            if (b == 0) {
+                return Double.POSITIVE_INFINITY;
+            } else {
+                return Math.sqrt(a / b);
+            }
         }
-        return 0;
+        throw new Exception("sqrt of negative number");
     }
 }

@@ -12,8 +12,9 @@ public class MyStepdefs {
     private Calculator calculator;
     private int value1;
     private int value2;
-    private int result;
-    private double doubleResult;
+    private int addResult;
+    private double sqrtResult;
+    private String exceptionString;
 
 
     @Before
@@ -21,14 +22,20 @@ public class MyStepdefs {
         calculator = new Calculator();
     }
 
-    @Given("^Two input values, -(\\d+) and (\\d+)$")
+    @Given("^Add Two input values, -(\\d+) and (\\d+)$")
     public void twoInputValuesAndWithNegArg(int arg0, int arg1) {
         value1 = -1 * arg0;
         value2 = arg1;
     }
 
+    @Given("^Add two input values, -(\\d+) and (\\d+)$")
+    public void add_two_input_values_and(int arg1, int arg2) throws Throwable {
+        value1 = -1 * arg1;
+        value2 = arg2;
+    }
 
-    @Given("^Two input values, (\\d+) and (\\d+)$")
+
+    @Given("^Add two input values, (\\d+) and (\\d+)$")
     public void twoInputValuesAnd(int arg0, int arg1) {
         value1 = arg0;
         value2 = arg1;
@@ -37,69 +44,81 @@ public class MyStepdefs {
 
     @When("^I add the two values$")
     public void iAddTheTwoValues() {
-        result = calculator.add(value1, value2);
-        System.out.print(result);
+        addResult = calculator.add(value1, value2);
+        System.out.print(addResult);
     }
 
-    @Then("^I expect the result (\\d+)$")
+    @Then("^I expect the result (\\d+) from add$")
     public void iExpectTheResult(int arg0) {
-        Assert.assertEquals(arg0, result);
+        Assert.assertEquals(arg0, addResult);
     }
 
-
-    @Then("^I expect the result (\\d+)\\.(\\d+)$")
-    public void iExpectTheResult(int arg0, int arg1) {
-        double c = Double.parseDouble(arg0 + "." + arg1);
-        Assert.assertEquals(c, doubleResult, 0.00001);
-    }
-
+    /// sqrt
     @When("^I call func with two values$")
     public void iCallFuncWithTwoValues() {
-        doubleResult = calculator.sqrtOfAFraction(value1, value2);
-        System.out.print(result);
+        try {
+            sqrtResult = calculator.sqrtOfAFraction(value1, value2);
+            System.out.print(sqrtResult);
+        } catch (Exception e) {
+            exceptionString = e.getMessage();
+        }
+
     }
 
 
-    @Given("^Two positive input values, (\\d+) and (\\d+)$")
+    @Given("^SQRT two input values, (\\d+) and (\\d+)$")
     public void twoPositiveInputValuesAnd(int arg0, int arg1) {
         value1 = arg0;
         value2 = arg1;
     }
 
-    @Given("^Two negative input values, -(\\d+) and -(\\d+)$")
+    @Given("^SQRT two input values, -(\\d+) and -(\\d+)$")
     public void twoNegativeInputValuesAnd(int arg0, int arg1) {
         value1 = -1 * arg0;
         value2 = -1 * arg1;
     }
 
-    @Given("^Two positive-negative input values, (\\d+) and -(\\d+)$")
+    @Given("^SQRT two input values, (\\d+) and -(\\d+)$")
     public void twoPositiveNegativeInputValuesAnd(int arg0, int arg1) {
         value1 = arg0;
         value2 = -1 * arg1;
     }
 
-    @Given("^Two negative-positive input values, -(\\d+) and (\\d+)$")
+    @Given("^SQRT two input values, -(\\d+) and (\\d+)$")
     public void twoNegativePositiveInputValuesAnd(int arg0, int arg1) {
         value1 = -1 * arg0;
         value2 = arg1;
     }
 
-    @Given("^Two negative-zero input values, -(\\d+) and (\\d+)$")
-    public void twoNegativeZeroInputValuesAnd(int arg0, int arg1) {
-        value1 = -1 * arg0;
-        value2 = arg1;
+
+    @Then("^I expect the result infinity from sqrt$")
+    public void iExpectTheResultInfinity() {
+        Assert.assertEquals(sqrtResult, Double.POSITIVE_INFINITY, 0.0001);
     }
 
-    @Given("^Two positive-zero input values, (\\d+) and (\\d+)$")
-    public void twoPositiveZeroInputValuesAnd(int arg0, int arg1) {
-        value1 = arg0;
-        value2 = arg1;
+
+    @Then("^I expect the result \"([^\"]*)\" from sqrt$")
+    public void iExpectTheResultFromSqrt(String arg0) throws Throwable {
+        Assert.assertEquals(arg0, exceptionString);
     }
 
-    @Given("^Two zero-zero input values, (\\d+) and (\\d+)$")
-    public void twoZeroZeroInputValuesAnd(int arg0, int arg1) {
-        value1 = arg0;
-        value2 = arg1;
+    @Then("^I expect the result sqrt of negative number from sqrt$")
+    public void i_expect_the_result_sqrt_of_negative_number_from_sqrt() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        Assert.assertEquals(exceptionString, "sqrt of negative number");
     }
+
+    @Then("^I expect the result (\\d+)\\.(\\d+) from sqrt$")
+    public void iExpectTheResultFromSqrt(int arg0, int arg1) {
+        Assert.assertEquals(Double.parseDouble(arg0 + "." + arg1), sqrtResult, 0.00001);
+    }
+
+
+    @Then("^I expect the result (\\d+) from sqrt$")
+    public void iExpectTheResultIntFromSqrt(double arg0) {
+        Assert.assertEquals(arg0, sqrtResult, 0.00001);
+    }
+
+
 }
 
